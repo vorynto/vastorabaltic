@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Image from "next/image";
-import { Palette, Save, Settings, TextCursorInput, Inbox } from "lucide-react";
+import { Palette, Save, Settings, Share2, TextCursorInput, Inbox } from "lucide-react";
 import { Enquiry } from "@/lib/data";
 import { SiteContent, SiteSettings } from "@/lib/defaultContent";
 
@@ -131,6 +131,46 @@ export function AdminPanel({
                 <input type="color" value={settings.backgroundColor} onChange={(event) => setSettings({ ...settings, backgroundColor: event.target.value })} />
               </label>
             </div>
+            <div className="admin-social-heading">
+              <Share2 size={17} />
+              Social Media Links
+            </div>
+            <label>
+              Facebook URL
+              <input
+                type="url"
+                placeholder="https://facebook.com/yourpage"
+                value={settings.facebook ?? ""}
+                onChange={(event) => setSettings({ ...settings, facebook: event.target.value })}
+              />
+            </label>
+            <label>
+              Instagram URL
+              <input
+                type="url"
+                placeholder="https://instagram.com/yourhandle"
+                value={settings.instagram ?? ""}
+                onChange={(event) => setSettings({ ...settings, instagram: event.target.value })}
+              />
+            </label>
+            <label>
+              LinkedIn URL
+              <input
+                type="url"
+                placeholder="https://linkedin.com/company/yourcompany"
+                value={settings.linkedin ?? ""}
+                onChange={(event) => setSettings({ ...settings, linkedin: event.target.value })}
+              />
+            </label>
+            <label>
+              YouTube URL
+              <input
+                type="url"
+                placeholder="https://youtube.com/@yourchannel"
+                value={settings.youtube ?? ""}
+                onChange={(event) => setSettings({ ...settings, youtube: event.target.value })}
+              />
+            </label>
             <button className="primary-button" type="submit">
               <Save size={18} />
               Save settings

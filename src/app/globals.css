@@ -713,6 +713,74 @@ textarea {
   font-weight: 850;
 }
 
+/* ─── Social Icons ─── */
+
+.footer-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.social-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(15, 82, 89, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary);
+  transition: background 200ms ease, color 200ms ease, transform 180ms ease, box-shadow 200ms ease;
+}
+
+.social-icon-link:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 82, 89, 0.22);
+}
+
+.contact-socials {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.contact-social-label {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.contact-social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.contact-social-icon-link {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+/* Admin social heading */
+.admin-social-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
 .admin-shell {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);

@@ -6,6 +6,10 @@ export type SiteSettings = {
   backgroundColor: string;
   fontFamily: string;
   email: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  youtube?: string;
 };
 
 export type SiteContent = {
@@ -26,7 +30,11 @@ export const defaultSettings: SiteSettings = {
   accentColor: "#10a8df",
   backgroundColor: "#ffffff",
   fontFamily: "Inter, Arial, sans-serif",
-  email: "info@vastorabaltic.lt"
+  email: "info@vastorabaltic.lt",
+  facebook: "",
+  instagram: "",
+  linkedin: "",
+  youtube: ""
 };
 
 export const defaultContent: SiteContent = {
