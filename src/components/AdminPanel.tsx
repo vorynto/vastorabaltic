@@ -27,12 +27,21 @@ export function AdminPanel({
   const [notice, setNotice] = useState("");
 
   async function save(path: string, payload: unknown) {
-    const response = await fetch(path, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    setNotice(response.ok ? "Saved successfully." : "Save failed. Please try again.");
+    try {
+      const response = await fetch(path, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        setNotice("Saved successfully.");
+      } else {
+        const body = await response.json().catch(() => ({}));
+        setNotice(`Save failed (${response.status}): ${body.error ?? "unknown error"}`);
+      }
+    } catch {
+      setNotice("Save failed: network error.");
+    }
   }
 
   async function refreshEnquiries() {

@@ -10,15 +10,20 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-  if (user?.app_metadata?.role !== "admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user || user.app_metadata?.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const settings = await request.json();
+    const saved = await saveSettings(settings);
+    revalidatePath("/", "layout");
+    return NextResponse.json(saved);
+  } catch (err) {
+    console.error("PUT /api/settings error:", err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
-
-  const settings = await request.json();
-  const saved = await saveSettings(settings);
-  revalidatePath("/", "layout");
-  return NextResponse.json(saved);
 }

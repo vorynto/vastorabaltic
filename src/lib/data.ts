@@ -20,7 +20,11 @@ type LocalStore = {
   enquiries: Enquiry[];
 };
 
-const dataFile = path.join(process.cwd(), "local-data.json");
+// On serverless (Vercel etc.) the project dir is read-only; /tmp is writable.
+const dataFile = path.join(
+  process.env.NODE_ENV === "production" ? "/tmp" : process.cwd(),
+  "local-data.json"
+);
 
 function serviceClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
