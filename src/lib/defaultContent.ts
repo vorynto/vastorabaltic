@@ -38,7 +38,7 @@ export const defaultSettings: SiteSettings = {
 };
 
 export const defaultContent: SiteContent = {
-  heroTitle: "Reliable construction recruitment for Lithuania and Europe",
+  heroTitle: "Reliable Recruitment Solutions for Lithuania and Europe",
   heroSubtitle:
     "Vastorabaltic helps companies build dependable teams through fast sourcing, careful screening, and transparent hiring support for construction and skilled trade roles.",
   heroCta: "Send an enquiry",
