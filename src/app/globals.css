@@ -847,10 +847,6 @@ textarea {
   font-weight: 800;
 }
 
-.footer-credits-bar {
-  background: var(--primary);
-}
-
 .footer-credits-inner {
   display: flex;
   justify-content: space-between;
@@ -858,9 +854,11 @@ textarea {
   gap: 16px;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 14px 0;
+  padding: 14px 24px;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.75);
+  background: var(--primary);
+  border-radius: 8px 8px 0 0;
 }
 
 .footer-credits-bar a {
