@@ -1,0 +1,172 @@
+import { promises as fs } from "fs";
+import path from "path";
+import { createClient } from "@supabase/supabase-js";
+import { defaultContent, defaultSettings, SiteContent, SiteSettings } from "./defaultContent";
+
+export type Enquiry = {
+  id?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  service?: string;
+  message: string;
+  created_at?: string;
+};
+
+type LocalStore = {
+  settings: SiteSettings;
+  content: SiteContent;
+  enquiries: Enquiry[];
+};
+
+const dataFile = path.join(process.cwd(), "local-data.json");
+
+function serviceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    return null;
+  }
+
+  return createClient(url, key, {
+    auth: { persistSession: false }
+  });
+}
+
+async function readLocal(): Promise<LocalStore> {
+  try {
+    const raw = await fs.readFile(dataFile, "utf8");
+    return JSON.parse(raw) as LocalStore;
+  } catch {
+    return {
+      settings: defaultSettings,
+      content: defaultContent,
+      enquiries: []
+    };
+  }
+}
+
+async function writeLocal(store: LocalStore) {
+  await fs.writeFile(dataFile, JSON.stringify(store, null, 2), "utf8");
+}
+
+export async function getSettings(): Promise<SiteSettings> {
+  const supabase = serviceClient();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("site_settings")
+      .select("settings")
+      .eq("id", "global")
+      .single();
+
+    if (data?.settings) {
+      return { ...defaultSettings, ...(data.settings as SiteSettings) };
+    }
+  }
+
+  const local = await readLocal();
+  return { ...defaultSettings, ...local.settings };
+}
+
+export async function saveSettings(settings: SiteSettings) {
+  const nextSettings = { ...defaultSettings, ...settings };
+  const supabase = serviceClient();
+
+  if (supabase) {
+    await supabase
+      .from("site_settings")
+      .upsert({ id: "global", settings: nextSettings, updated_at: new Date().toISOString() });
+    return nextSettings;
+  }
+
+  const local = await readLocal();
+  local.settings = nextSettings;
+  await writeLocal(local);
+  return nextSettings;
+}
+
+export async function getContent(): Promise<SiteContent> {
+  const supabase = serviceClient();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("site_content")
+      .select("content")
+      .eq("id", "global")
+      .single();
+
+    if (data?.content) {
+      return { ...defaultContent, ...(data.content as SiteContent) };
+    }
+  }
+
+  const local = await readLocal();
+  return { ...defaultContent, ...local.content };
+}
+
+export async function saveContent(content: SiteContent) {
+  const nextContent = { ...defaultContent, ...content };
+  const supabase = serviceClient();
+
+  if (supabase) {
+    await supabase
+      .from("site_content")
+      .upsert({ id: "global", content: nextContent, updated_at: new Date().toISOString() });
+    return nextContent;
+  }
+
+  const local = await readLocal();
+  local.content = nextContent;
+  await writeLocal(local);
+  return nextContent;
+}
+
+export async function listEnquiries(): Promise<Enquiry[]> {
+  const supabase = serviceClient();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("enquiries")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    return data ?? [];
+  }
+
+  const local = await readLocal();
+  return local.enquiries.sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
+}
+
+export async function createEnquiry(enquiry: Enquiry) {
+  const payload = {
+    ...enquiry,
+    created_at: new Date().toISOString()
+  };
+  const supabase = serviceClient();
+
+  if (supabase) {
+    const { data, error } = await supabase.from("enquiries").insert(payload).select().single();
+    if (error) {
+      throw error;
+    }
+    return data as Enquiry;
+  }
+
+  const local = await readLocal();
+  local.enquiries.push({ ...payload, id: crypto.randomUUID() });
+  await writeLocal(local);
+  return payload;
+}
+
+export function isAdminRequest(request: Request) {
+  const expected = process.env.ADMIN_ACCESS_CODE;
+
+  if (!expected) {
+    return true;
+  }
+
+  return request.headers.get("x-admin-code") === expected;
+}
