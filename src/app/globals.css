@@ -848,12 +848,17 @@ textarea {
 }
 
 .footer-credits-bar {
+  background: var(--primary);
+}
+
+.footer-credits-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 14px 32px;
-  background: var(--primary);
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 14px 0;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.75);
 }
@@ -1671,11 +1676,10 @@ textarea {
     gap: 28px;
   }
 
-  .footer-credits-bar {
+  .footer-credits-inner {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    padding: 14px 24px;
   }
 
   .page-hero {

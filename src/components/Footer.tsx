@@ -36,16 +36,18 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         </div>
       </footer>
       <div className="footer-credits-bar">
-        <span className="footer-copyright">
-          &copy; {year}{" "}
-          <a href="/">{settings.siteName}</a>
-        </span>
-        <span className="footer-devby">
-          Developed by{" "}
-          <a href="https://vorynto.com" rel="noreferrer" target="_blank">
-            Vorynto Pvt. Ltd.
-          </a>
-        </span>
+        <div className="footer-credits-inner">
+          <span className="footer-copyright">
+            &copy; {year}{" "}
+            <a href="/">{settings.siteName}</a>
+          </span>
+          <span className="footer-devby">
+            Developed by{" "}
+            <a href="https://vorynto.com" rel="noreferrer" target="_blank">
+              Vorynto Pvt. Ltd.
+            </a>
+          </span>
+        </div>
       </div>
     </>
   );
