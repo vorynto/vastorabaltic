@@ -334,7 +334,7 @@ h3 {
   width: min(1180px, calc(100% - 32px));
   min-height: calc(100vh - 118px);
   margin: 0 auto;
-  padding: 58px 0 54px;
+  padding: 32px 0 28px;
 }
 
 .hero-slide-copy {
