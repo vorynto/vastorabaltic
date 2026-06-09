@@ -54,7 +54,7 @@ export function SocialLinks({
   className?: string;
 }) {
   const activeStyle = { background: "var(--primary)", color: "#fff" };
-  const inactiveStyle = { background: "var(--primary)", color: "#fff", opacity: 0.35, pointerEvents: "none" as const };
+  const inactiveStyle = { background: "var(--primary)", color: "rgba(255,255,255,0.35)", pointerEvents: "none" as const };
 
   return (
     <>
