@@ -406,6 +406,10 @@ h3 {
   line-height: 1.65;
 }
 
+.solution-card h2 {
+  font-size: 1.1rem;
+}
+
 .why-section {
   position: relative;
   display: grid;
@@ -725,20 +729,16 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(15, 82, 89, 0.18);
-  border-radius: 8px;
-  background: #fff;
-  color: var(--primary);
-  transition: background 200ms ease, color 200ms ease, transform 180ms ease, box-shadow 200ms ease;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  transition: transform 180ms ease, box-shadow 200ms ease;
 }
 
 .social-icon-link:hover {
-  background: var(--primary);
-  color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(15, 82, 89, 0.22);
+  box-shadow: 0 10px 24px rgba(15, 82, 89, 0.28);
 }
 
 .contact-socials {
@@ -762,9 +762,62 @@ textarea {
 }
 
 .contact-social-icon-link {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+}
+
+/* Admin section heading (full-width label row) */
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+/* Process step editor */
+.process-step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.process-step-fields {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  flex: 1;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.icon-button.danger {
+  color: #b92e35;
+  border-color: #f5c6c8;
+}
+
+.icon-button.danger:hover {
+  background: #fef2f2;
 }
 
 /* Admin social heading */
@@ -1256,6 +1309,66 @@ textarea {
   .jp-visual-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* ─── Admin Login Page ─── */
+
+.login-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: var(--soft);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 36px 32px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(15, 82, 89, 0.1);
+}
+
+.login-card img {
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+.login-card h1 {
+  font-size: 1.7rem;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-error {
+  color: #b92e35;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* ─── Logout Button ─── */
+
+.admin-sidebar .logout-button {
+  margin-top: auto;
+  color: #7a3a3d;
+}
+
+.admin-sidebar .logout-button:hover {
+  background: #fef2f2;
+  color: #b92e35;
 }
 
 @keyframes fadeUp {

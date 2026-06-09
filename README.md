@@ -28,12 +28,12 @@ The app can run without Supabase keys during development. In that mode, content 
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-ADMIN_ACCESS_CODE=choose-a-private-admin-code
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SECRET_KEY=your-secret-key
 ```
 
-`ADMIN_ACCESS_CODE` is sent from the admin panel to protect write actions and enquiry reads.
+Keys are found in your Supabase dashboard under **Settings → API**.
+Admin login uses Supabase Auth — create an admin user under **Authentication → Users**.
 
 ## Assets
 

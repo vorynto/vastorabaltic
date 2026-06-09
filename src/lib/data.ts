@@ -24,7 +24,7 @@ const dataFile = path.join(process.cwd(), "local-data.json");
 
 function serviceClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = process.env.SUPABASE_SECRET_KEY;
 
   if (!url || !key) {
     return null;
@@ -161,12 +161,3 @@ export async function createEnquiry(enquiry: Enquiry) {
   return payload;
 }
 
-export function isAdminRequest(request: Request) {
-  const expected = process.env.ADMIN_ACCESS_CODE;
-
-  if (!expected) {
-    return true;
-  }
-
-  return request.headers.get("x-admin-code") === expected;
-}

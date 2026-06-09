@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
-import { createEnquiry, isAdminRequest, listEnquiries } from "@/lib/data";
+import { createEnquiry, listEnquiries } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
-  if (!isAdminRequest(request)) {
+export async function GET() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user?.app_metadata?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

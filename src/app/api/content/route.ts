@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getContent, isAdminRequest, saveContent } from "@/lib/data";
+import { getContent, saveContent } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +9,10 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!isAdminRequest(request)) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user?.app_metadata?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
