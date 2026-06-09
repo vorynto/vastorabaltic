@@ -75,19 +75,10 @@ export async function getSettings(): Promise<SiteSettings> {
   return { ...defaultSettings, ...local.settings };
 }
 
+// Local-file fallback only — Supabase writes are handled by the API routes
+// using the authenticated SSR client so the user's session grants write access.
 export async function saveSettings(settings: SiteSettings) {
   const nextSettings = { ...defaultSettings, ...settings };
-  const supabase = serviceClient();
-
-  if (supabase) {
-    const { error } = await supabase
-      .from("site_settings")
-      .upsert({ id: "global", settings: nextSettings, updated_at: new Date().toISOString() });
-
-    if (!error) return nextSettings;
-    console.error("Supabase saveSettings failed, falling back to local:", error);
-  }
-
   const local = await readLocal();
   local.settings = nextSettings;
   await writeLocal(local);
@@ -115,17 +106,6 @@ export async function getContent(): Promise<SiteContent> {
 
 export async function saveContent(content: SiteContent) {
   const nextContent = { ...defaultContent, ...content };
-  const supabase = serviceClient();
-
-  if (supabase) {
-    const { error } = await supabase
-      .from("site_content")
-      .upsert({ id: "global", content: nextContent, updated_at: new Date().toISOString() });
-
-    if (!error) return nextContent;
-    console.error("Supabase saveContent failed, falling back to local:", error);
-  }
-
   const local = await readLocal();
   local.content = nextContent;
   await writeLocal(local);
