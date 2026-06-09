@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { getContent, saveContent } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
@@ -17,5 +18,7 @@ export async function PUT(request: Request) {
   }
 
   const content = await request.json();
-  return NextResponse.json(await saveContent(content));
+  const saved = await saveContent(content);
+  revalidatePath("/", "layout");
+  return NextResponse.json(saved);
 }

@@ -76,10 +76,12 @@ export async function saveSettings(settings: SiteSettings) {
   const supabase = serviceClient();
 
   if (supabase) {
-    await supabase
+    const { error } = await supabase
       .from("site_settings")
       .upsert({ id: "global", settings: nextSettings, updated_at: new Date().toISOString() });
-    return nextSettings;
+
+    if (!error) return nextSettings;
+    console.error("Supabase saveSettings failed, falling back to local:", error);
   }
 
   const local = await readLocal();
@@ -112,10 +114,12 @@ export async function saveContent(content: SiteContent) {
   const supabase = serviceClient();
 
   if (supabase) {
-    await supabase
+    const { error } = await supabase
       .from("site_content")
       .upsert({ id: "global", content: nextContent, updated_at: new Date().toISOString() });
-    return nextContent;
+
+    if (!error) return nextContent;
+    console.error("Supabase saveContent failed, falling back to local:", error);
   }
 
   const local = await readLocal();

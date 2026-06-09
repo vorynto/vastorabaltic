@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { getSettings, saveSettings } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
@@ -17,5 +18,7 @@ export async function PUT(request: Request) {
   }
 
   const settings = await request.json();
-  return NextResponse.json(await saveSettings(settings));
+  const saved = await saveSettings(settings);
+  revalidatePath("/", "layout");
+  return NextResponse.json(saved);
 }
