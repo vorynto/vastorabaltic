@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +17,8 @@ const navItems = [
 
 export function Header({ settings }: { settings: SiteSettings }) {
   const [open, setOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
 
   // Close drawer on route change
@@ -30,9 +32,28 @@ export function Header({ settings }: { settings: SiteSettings }) {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  // Hide on scroll-down, show on scroll-up (mobile only)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth > 980) return;
+      const currentY = window.scrollY;
+      if (currentY < 80) {
+        setHeaderHidden(false);
+      } else if (currentY > lastScrollY.current) {
+        setHeaderHidden(true);
+      } else {
+        setHeaderHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
-      <header className="site-header">
+      <header className={`site-header${headerHidden ? " header-hidden" : ""}`}>
         <Link className="brand" href="/" aria-label="Vastorabaltic home">
           <Image src={settings.logoUrl} alt="Vastorabaltic logo" width={54} height={54} />
           <span>{settings.siteName}</span>

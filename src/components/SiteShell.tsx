@@ -8,7 +8,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header settings={settings} />
-      <main>{children}</main>
+      <main className="site-content">{children}</main>
       <Footer settings={settings} />
     </>
   );
