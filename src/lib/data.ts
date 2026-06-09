@@ -26,17 +26,14 @@ const dataFile = path.join(
   "local-data.json"
 );
 
-function serviceClient() {
+// Uses the publishable (anon) key for reads — RLS allows anon to read
+// site_settings and site_content. Writes go through the API routes which
+// use the authenticated SSR client so RLS allows writes too.
+function publicClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SECRET_KEY;
-
-  if (!url || !key) {
-    return null;
-  }
-
-  return createClient(url, key, {
-    auth: { persistSession: false }
-  });
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false } });
 }
 
 async function readLocal(): Promise<LocalStore> {
@@ -57,7 +54,7 @@ async function writeLocal(store: LocalStore) {
 }
 
 export async function getSettings(): Promise<SiteSettings> {
-  const supabase = serviceClient();
+  const supabase = publicClient();
 
   if (supabase) {
     const { data } = await supabase
@@ -86,7 +83,7 @@ export async function saveSettings(settings: SiteSettings) {
 }
 
 export async function getContent(): Promise<SiteContent> {
-  const supabase = serviceClient();
+  const supabase = publicClient();
 
   if (supabase) {
     const { data } = await supabase
@@ -112,20 +109,22 @@ export async function saveContent(content: SiteContent) {
   return nextContent;
 }
 
-export async function listEnquiries(): Promise<Enquiry[]> {
-  const supabase = serviceClient();
-
-  if (supabase) {
-    const { data } = await supabase
+// Requires an authenticated client — anon role cannot read enquiries (RLS).
+// Callers must pass the SSR supabase client from their route/page context.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function listEnquiries(supabase: any): Promise<Enquiry[]> {
+  try {
+    const { data, error } = await supabase
       .from("enquiries")
       .select("*")
       .order("created_at", { ascending: false });
 
+    if (error) throw error;
     return data ?? [];
+  } catch {
+    const local = await readLocal();
+    return local.enquiries.sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
   }
-
-  const local = await readLocal();
-  return local.enquiries.sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
 }
 
 export async function createEnquiry(enquiry: Enquiry) {
@@ -133,7 +132,7 @@ export async function createEnquiry(enquiry: Enquiry) {
     ...enquiry,
     created_at: new Date().toISOString()
   };
-  const supabase = serviceClient();
+  const supabase = publicClient();
 
   if (supabase) {
     const { data, error } = await supabase.from("enquiries").insert(payload).select().single();

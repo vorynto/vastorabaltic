@@ -14,7 +14,7 @@ export default async function AdminPage() {
   const [content, settings, enquiries] = await Promise.all([
     getContent(),
     getSettings(),
-    listEnquiries()
+    listEnquiries(supabase)
   ]);
 
   return <AdminPanel initialContent={content} initialSettings={settings} initialEnquiries={enquiries} />;
